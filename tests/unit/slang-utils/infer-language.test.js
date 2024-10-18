@@ -1,5 +1,5 @@
 import { Language } from '@nomicfoundation/slang/language/index.js';
-import { inferLanguage } from '../../../src/slang-utils/infer-language.js';
+import { createParser } from '../../../src/slang-utils/create-parser.js';
 
 describe('inferLanguage', function () {
   const supportedVersions = Language.supportedVersions();
@@ -90,14 +90,14 @@ describe('inferLanguage', function () {
 
   for (const { description, source, version } of fixtures) {
     test(description, function () {
-      const inferredLanguage = inferLanguage(source);
-      expect(inferredLanguage.version).toEqual(version);
+      const parser = createParser(source);
+      expect(parser.version).toEqual(version);
     });
   }
 
   test('should throw an error if there are incompatible ranges', function () {
     expect(() =>
-      inferLanguage(`pragma solidity ^0.8.0; pragma solidity 0.7.6;`)
+      createParser(`pragma solidity ^0.8.0; pragma solidity 0.7.6;`)
     ).toThrow();
   });
 });
